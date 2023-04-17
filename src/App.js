@@ -1,12 +1,22 @@
 import React, { useState } from "react";
+import { isAddress } from "ethers";
 import "./App.css";
+
+import gitImage from "./images/github-mark-white.png";
 
 function App() {
   const [walletAddress, setWalletAddress] = useState("");
   const [eligibility, setEligibility] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const checkEligibility = async () => {
+    if (!isAddress(walletAddress)) {
+      setError("Please enter a valid wallet address.");
+      setEligibility(null);
+      return;
+    }
+    setError(null);
     setLoading(true);
     try {
       const response = await fetch(
@@ -27,40 +37,65 @@ function App() {
     }
   };
 
+  const handleAddressChange = (e) => {
+    const newAddress = e.target.value;
+    setWalletAddress(newAddress);
+    if (isAddress(newAddress)) {
+      setError(null);
+    }
+  };
+
   return (
     <div className="Main">
-    <div className="App">
-      <div className="Form">
-        <h1>Arbitrum Airdrop Eligibility Checker</h1>
-        <input
-          type="text"
-          placeholder="Enter any Arbitrum wallet address"
-          value={walletAddress}
-          onChange={(e) => setWalletAddress(e.target.value)}
-        />
-        <button onClick={checkEligibility}>Check eligibility</button>
+      <div className="App">
+        <div className="Form">
+          <h1>Arbitrum Airdrop Eligibility Checker</h1>
+          <input
+            type="text"
+            placeholder="Enter any Arbitrum wallet address"
+            value={walletAddress}
+            onChange={handleAddressChange}
+          />
+          <button
+            onClick={checkEligibility}
+            disabled={!walletAddress || loading}
+          >
+            Check eligibility
+          </button>
+          {error && <p className="Error">{error}</p>}
 
-        {loading && <p>Loading...</p>}
+          {loading && <p>Loading...</p>}
 
-        {eligibility && (
-          <>
-            {"eligibility" in eligibility ? (
-              eligibility.hasClaimed ? (
-                <p>This wallet has already claimed.</p>
-              ) : eligibility.eligibility.tokens === 0 ? (
-                <p>Wallet is not eligible.</p>
+          {eligibility && (
+            <>
+              {"eligibility" in eligibility ? (
+                eligibility.hasClaimed ? (
+                  <p>This wallet has already claimed.</p>
+                ) : eligibility.eligibility.tokens === 0 ? (
+                  <p>Wallet is not eligible.</p>
+                ) : (
+                  <p>Amount claimable: {eligibility.eligibility.tokens}</p>
+                )
               ) : (
-                <p>Amount claimable: {eligibility.eligibility.tokens}</p>
-              )
-            ) : (
-              <p>Unexpected response from API. Please try again later.</p>
-            )}
-          </>
-        )}
+                <p>Unexpected response from API. Please try again later.</p>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
-    <div className="Credits">
-        <p>Provided by <a href="https://xeenon.xyz/0x5473580406D12E1cBD4c00B77e158FfF0CE9424e" target="blank">@transmental</a></p>
+      <div className="Credits">
+        <a href="https://github.com/transmental/" target="blank">
+          <img className="git" src={gitImage} alt="GitHub Logo" />
+        </a>
+        <p>
+          Provided by{" "}
+          <a
+            href="https://xeenon.xyz/0x5473580406D12E1cBD4c00B77e158FfF0CE9424e"
+            target="blank"
+          >
+            @transmental
+          </a>
+        </p>
       </div>
     </div>
   );
