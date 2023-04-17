@@ -70,11 +70,11 @@ function App() {
             <>
               {"eligibility" in eligibility ? (
                 eligibility.hasClaimed ? (
-                  <p>This wallet has already claimed.</p>
+                  <p>This wallet has already claimed {eligibility.eligibility.tokens} $ARB.</p>
                 ) : eligibility.eligibility.tokens === 0 ? (
                   <p>Wallet is not eligible.</p>
                 ) : (
-                  <p>Amount claimable: {eligibility.eligibility.tokens}</p>
+                  <p>Amount claimable: {eligibility.eligibility.tokens} $ARB. <a href="https://arbitrum.foundation" target="blank">Claim now.</a></p>
                 )
               ) : (
                 <p>Unexpected response from API. Please try again later.</p>
