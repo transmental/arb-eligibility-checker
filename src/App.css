@@ -123,6 +123,9 @@ input::placeholder {
 }
 
 .Credits {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
   position: absolute;
   padding: 1rem;
   bottom: 0;
@@ -140,4 +143,20 @@ input::placeholder {
 .Credits a:hover {
   text-decoration: underline;
 }
+
+.git {
+  max-width: 20px;
+  position: relative;
+  padding: 1rem;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.Error {
+  color: red !important;
+  margin-top: 0.5rem;
+}
+
 
